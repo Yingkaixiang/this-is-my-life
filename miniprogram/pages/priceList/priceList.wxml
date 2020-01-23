@@ -1,0 +1,42 @@
+<view class="unit">单位：元/500g</view>
+
+<van-search
+  value="{{ value }}"
+  placeholder="请输入搜索关键词"
+  bind:change="onChange"
+  bind:search="onSearch"
+/>
+
+<van-tabs
+  active="{{ active }}"
+  type="card"
+  class="tab"
+  bind:click="handleTabClick"
+>
+  <van-tab name="all" title="全部" />
+  <van-tab name="meats" title="荤菜" />
+  <van-tab name="vegetables" title="蔬菜" />
+</van-tabs>
+
+<van-cell-group>
+  <van-cell
+    wx:for="{{ list }}"
+    wx:key="id"
+    value="{{ item.price }}"
+    is-link
+    bind:click="handleCellClick"
+  >
+    <view slot="title">
+      <van-tag
+        type="{{ item.type === 'meats' ? 'warning' : 'success' }}"
+      >
+        {{ item.type === 'meats' ? '荤菜' : '蔬菜' }}
+      </van-tag>
+      <view class="title">{{ item.name }}</view>
+    </view>
+  </van-cell>
+  <view
+    class="empty"
+    wx:if="{{ list.length === 0 }}"
+  >暂无数据</view>
+</van-cell-group>
