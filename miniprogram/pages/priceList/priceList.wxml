@@ -22,15 +22,15 @@
   <van-cell
     wx:for="{{ list }}"
     wx:key="id"
-    value="{{ item.price }}"
+    value="{{ item.price[0].value / 100 }}元"
     is-link
     bind:click="handleCellClick"
   >
     <view slot="title">
       <van-tag
-        type="{{ item.type === 'meats' ? 'warning' : 'success' }}"
+        type="{{ item.type === 1 ? 'success' : 'warning' }}"
       >
-        {{ item.type === 'meats' ? '荤菜' : '蔬菜' }}
+        {{ item.type === 1 ? '蔬菜' : '荤菜' }}
       </van-tag>
       <view class="title">{{ item.name }}</view>
     </view>

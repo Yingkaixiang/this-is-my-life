@@ -1,0 +1,60 @@
+<form
+  bindsubmit="formSubmit"
+  bindreset="formReset"
+>
+  <van-cell>
+    <view slot="title">
+      <view>名称</view>
+      <input name="name" />
+    </view>
+  </van-cell>
+
+  <van-cell bind:click="handleTypeClick">
+    <view slot="title">
+      <picker
+        bindchange="handleTypeChange"
+        range-key="name"
+        range="{{array}}"
+        name="type"
+      >
+        <view class="picker">
+          品类 {{ array[index].name }}
+        </view>
+      </picker>
+    </view>
+  </van-cell>
+
+  <van-cell bind:click="handleTypeClick">
+    <view slot="title">
+      <view>价格</view>
+      <input type="digit" name="price"></input>
+    </view>
+  </van-cell>
+
+  <van-cell bind:click="handleTypeClick">
+    <view slot="title">
+      <picker
+        mode="date"
+        bindchange="handleDateChange"
+        name="date"
+      >
+        <view class="picker">
+          时间 {{ date }}
+        </view>
+      </picker>
+    </view>
+  </van-cell>
+
+  <van-cell bind:click="handleTypeClick">
+    <view slot="title">
+      <view>地点</view>
+      <input name="location" />
+    </view>
+  </van-cell>
+
+  <button
+    type="primary"
+    class="btn"
+    formType="submit"
+  >新增</button>
+</form>

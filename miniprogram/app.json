@@ -2,6 +2,7 @@
   "pages": [
     "pages/priceList/priceList",
     "pages/index/index",
+    "pages/addFood/addFood",
     "pages/chart/chart",
     "pages/userConsole/userConsole",
     "pages/storageConsole/storageConsole",
