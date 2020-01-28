@@ -10,6 +10,12 @@ const formatTime = date => {
   return [year, month, day].join('-') + ' ' + [hour, minute, second].join(':')
 }
 
+function fixIOSTimestamp(time) {
+  var iosTime = time.replace(/-/g, '/');//解决ios端无法识别
+  return Date.parse(iosTime);
+}
+
 module.exports = {
-  formatTime: formatTime
+  formatTime: formatTime,
+  fixIOSTimestamp
 }

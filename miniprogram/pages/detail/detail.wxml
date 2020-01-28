@@ -2,43 +2,7 @@
   bindsubmit="handleFormSubmit"
   bindreset="handleFormReset"
 >
-  <view class="tips">基本信息</view>
-  <van-field
-    label="名称"
-    name="name"
-    size="large"
-    required
-    clearable
-    error-message="{{ error.name }}"
-    bind:input="handleNameInput"
-  />
-
-  <van-field
-    label="种类"
-    size="large"
-    readonly
-    bind:tap="handleTypeTap"
-    value="{{ columns[type].text }}"
-    name="type"
-    required
-    is-link
-    error-message="{{ error.type }}"
-    bind:change="handleTypeChange"
-  />
-
-  <van-popup
-    show="{{ show }}"
-    position="bottom"
-  >
-    <van-picker
-      show-toolbar
-      columns="{{ columns }}"
-      bind:confirm="handleTypeConfirm"
-      bind:cancel="handleTypeCancel"
-    />
-  </van-popup>
-
-  <view class="tips">价格信息</view>
+  <view class="tips">新增价格信息</view>
 
   <van-field
     label="价格"
@@ -90,3 +54,8 @@
     form-type="submit"
   >新增</button>
 </form>
+
+<view class="tips">价格趋势</view>
+<view class="chart">
+  <canvas class="canvas" canvas-id="lineCanvas"></canvas>
+</view>

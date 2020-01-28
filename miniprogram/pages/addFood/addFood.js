@@ -1,4 +1,4 @@
-import { formatTime } from '../../utils/date.js';
+import { formatTime, fixIOSTimestamp } from '../../utils/date.js';
 
 Page({
   data: {
@@ -87,7 +87,7 @@ Page({
         price: [
           {
             value: this.fenToHundred(data.price),
-            date: new Date(data.date),
+            date: fixIOSTimestamp(data.date),
             location: data.location
           }
         ],
@@ -102,6 +102,7 @@ Page({
   handleFormReset() { },
 
   create(data) {
+    console.dir(data);
     const db = wx.cloud.database()
     db.collection('foods').add({
       data,

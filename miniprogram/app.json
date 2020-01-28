@@ -1,9 +1,9 @@
 {
   "pages": [
     "pages/priceList/priceList",
+    "pages/detail/detail",
     "pages/addFood/addFood",
-    "pages/index/index",
-    "pages/chart/chart"
+    "pages/index/index"
   ],
   "window": {
     "backgroundColor": "#F6F6F6",

@@ -1,41 +1,60 @@
 <view class="unit">单位：元/500g</view>
 
-<van-search
-  value="{{ value }}"
-  placeholder="请输入搜索关键词"
-  bind:change="onChange"
-/>
-
-<van-tabs
-  active="{{ active }}"
-  type="card"
-  bind:click="handleTabClick"
->
-  <van-tab
-    wx:for="{{ mapping }}"
-    wx:for-index="key"
-    wx:for-item="value"
-    name="{{ key }}"
-    title="{{ value }}"
+<view class="search">
+  <van-search
+    value="{{ value }}"
+    placeholder="请输入搜索关键词"
+    bind:change="onChange"
   />
-</van-tabs>
+</view>
+
+<view class="tab">
+  <van-tabs
+    active="{{ active }}"
+    type="card"
+    bind:click="handleTabClick"
+  >
+    <van-tab
+      wx:for="{{ mapping }}"
+      wx:for-index="key"
+      wx:for-item="value"
+      name="{{ key }}"
+      title="{{ value }}"
+    />
+  </van-tabs>
+</view>
+
+<view class="unit">
+  <van-icon name="question-o" size="24rpx" />
+  <text>红色表示涨价，蓝色表示降价</text>
+</view>
 
 <van-cell-group>
-  <van-cell
+  <van-swipe-cell
     wx:for="{{ list }}"
     wx:key="id"
-    value="{{ item.price }}"
-    is-link
+    right-width="{{ 65 }}"
+    bind:click="handleClick"
     data-item="{{ item }}"
-    bind:click="handleCellClick"
   >
-    <view slot="title">
-      <van-tag type="{{ item.tag }}">
-        {{ item.type }}
-      </van-tag>
-      <view class="title">{{ item.name }}</view>
-    </view>
-  </van-cell>
+    <view
+      slot="right"
+      class="remove"
+    >删除</view>
+    <van-cell
+      is-link
+    >
+      <view style="color: {{ item.color }}">
+        {{ item.price }}
+      </view>
+      <view slot="title">
+        <van-tag type="{{ item.tag }}">
+          {{ item.type }}
+        </van-tag>
+        <view class="title">{{ item.name }}</view>
+      </view>
+    </van-cell>
+  </van-swipe-cell>
   <view
     class="empty"
     wx:if="{{ list.length === 0 }}"

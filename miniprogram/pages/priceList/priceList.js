@@ -28,17 +28,33 @@ Page({
   },
 
   format(list) {
+    const that = this;
     const { mapping, tag } = this.data;
+    console.dir(list);
     return list.map((item) => {
       const data = {
         id: item._id,
         name: item.name,
         type: mapping[item.type],
-        price: fenToYuan(item.price[0].value),
+        price: fenToYuan(item.price[item.price.length - 1].value),
         tag: tag[item.type],
+        color: that.checkPriceChange(item.price),
       }
+      console.dir(data);
       return data;
     });
+  },
+
+  checkPriceChange(list) {
+    const a = list[list.length - 1] ? list[list.length - 1].value : 0;
+    const b = list[list.length - 2] ? list[list.length - 2].value : 0;
+    if (b === 0) return;
+    const res = a - b;
+    if (res > 0) {
+      return 'red'
+    } else if (res < 0) {
+      return 'blue'
+    }
   },
 
   getList() {
@@ -88,18 +104,36 @@ Page({
 
   handleCellClick(e) {
     const { item } = e.currentTarget.dataset;
-    // const db = wx.cloud.database();
-    // db.collection('foods').where({ _id: item.id }).get({
-    //   success: function (res) {
-    //     // 输出 [{ "title": "The Catcher in the Rye", ... }]
-    //     console.log(res)
-    //   }
-    // })
     wx.navigateTo({
-      url: '/pages/chart/chart',
+      url: '/pages/detail/detail',
       success(res) {
         res.eventChannel.emit('acceptDataFromOpenerPage', { data: item })
       }
     })
+  },
+
+  handleClick(e) {
+    if (e.detail === 'right') {
+      const id = e.currentTarget.dataset.item.id;
+      const that = this;
+
+      const db = wx.cloud.database();
+      db.collection('foods').doc(id).remove({
+        success: function (res) {
+          wx.showToast({
+            title: '删除成功',
+          });
+          that.getList();
+        },
+        fail(err) {
+          wx.showToast({
+            icon: "none",
+            title: '不能删除别人的数据哦~',
+          })
+        }
+      })
+    } else {
+      this.handleCellClick(e);
+    }
   }
 })

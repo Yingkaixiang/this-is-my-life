@@ -1,12 +1,14 @@
 {
   "usingComponents": {
     "van-cell": "../../miniprogram_npm/vant-weapp/cell",
+    "van-swipe-cell": "../../miniprogram_npm/vant-weapp/swipe-cell",
     "van-cell-group": "../../miniprogram_npm/vant-weapp/cell-group",
     "van-search": "../../miniprogram_npm/vant-weapp/search",
     "van-tag": "../../miniprogram_npm/vant-weapp/tag",
     "van-tab": "../../miniprogram_npm/vant-weapp/tab",
     "van-tabs": "../../miniprogram_npm/vant-weapp/tabs",
-    "van-button": "../../miniprogram_npm/vant-weapp/button"
+    "van-button": "../../miniprogram_npm/vant-weapp/button",
+    "van-icon": "../../miniprogram_npm/vant-weapp/icon"
   },
   "enablePullDownRefresh": true
 }
