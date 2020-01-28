@@ -1,60 +1,82 @@
 <form
-  bindsubmit="formSubmit"
-  bindreset="formReset"
+  bindsubmit="handleFormSubmit"
+  bindreset="handleFormReset"
 >
-  <van-cell>
-    <view slot="title">
-      <view>名称</view>
-      <input name="name" />
-    </view>
-  </van-cell>
+  <van-field
+    label="名称"
+    name="name"
+    required
+    error-message="{{ error.name }}"
+    bind:input="handleNameInput"
+    clearable
+  />
 
-  <van-cell bind:click="handleTypeClick">
-    <view slot="title">
-      <picker
-        bindchange="handleTypeChange"
-        range-key="name"
-        range="{{array}}"
-        name="type"
-      >
-        <view class="picker">
-          品类 {{ array[index].name }}
-        </view>
-      </picker>
-    </view>
-  </van-cell>
+  <van-field
+    label="种类"
+    readonly
+    bind:tap="handleTypeTap"
+    value="{{ columns[type].text }}"
+    name="type"
+    required
+    error-message="{{ error.type }}"
+    bind:change="handleTypeChange"
+  />
 
-  <van-cell bind:click="handleTypeClick">
-    <view slot="title">
-      <view>价格</view>
-      <input type="digit" name="price"></input>
-    </view>
-  </van-cell>
+  <van-popup
+    show="{{ show }}"
+    position="bottom"
+  >
+    <van-picker
+      show-toolbar
+      columns="{{ columns }}"
+      bind:confirm="handleTypeConfirm"
+      bind:cancel="handleTypeCancel"
+    />
+  </van-popup>
 
-  <van-cell bind:click="handleTypeClick">
-    <view slot="title">
-      <picker
-        mode="date"
-        bindchange="handleDateChange"
-        name="date"
-      >
-        <view class="picker">
-          时间 {{ date }}
-        </view>
-      </picker>
-    </view>
-  </van-cell>
+  <van-field
+    label="价格"
+    name="price"
+    required
+    error-message="{{ error.price }}"
+    clearable
+    type="digit"
+  />
 
-  <van-cell bind:click="handleTypeClick">
-    <view slot="title">
-      <view>地点</view>
-      <input name="location" />
-    </view>
-  </van-cell>
+  <van-field
+    label="购买时间"
+    name="date"
+    required
+    error-message="{{ error.date }}"
+    readonly
+    bind:tap="handleDateTap"
+    value="{{ date }}"
+  />
+
+  <van-popup
+    show="{{ dateShow }}"
+    position="bottom"
+  >
+    <van-datetime-picker
+      type="datetime"
+      value="{{ currentDate }}"
+      bind:confirm="handleDateConfirm"
+      bind:cancel="handleDateCancel"
+    />
+  </van-popup>
+
+  <van-field
+    label="购买地点"
+    name="location"
+    required
+    error-message="{{ error.price }}"
+    clearable
+  />
 
   <button
-    type="primary"
     class="btn"
-    formType="submit"
+    loading="{{ loading }}"
+    type="primary"
+    form-type="submit"
   >新增</button>
 </form>

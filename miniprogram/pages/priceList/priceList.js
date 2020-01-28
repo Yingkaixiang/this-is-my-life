@@ -1,130 +1,105 @@
-import data from './data.js';
+import { fenToYuan } from '../../utils/money.js';
 
 Page({
-
-  /**
-   * 页面的初始数据
-   */
   data: {
     value: "",
-    list: data,
-    active: 0,
+    rawList: [],
+    list: [],
+    active: "0",
+    mapping: {
+      "0": "全部",
+      "1": "蔬菜",
+      "2": "荤菜",
+      "3": "菌菇"
+    },
+    tag: {
+      "1": "success",
+      "2": "warning",
+      "3": "primary"
+    }
   },
 
-  /**
-   * 生命周期函数--监听页面加载
-   */
   onLoad: function (options) {
-    const db = wx.cloud.database()
-    // 查询当前用户所有的 counters
-    db.collection('foods').where({
-      // _openid: this.data.openid
-    }).get({
+    this.getList();
+  },
+
+  onPullDownRefresh() {
+    this.getList();
+  },
+
+  format(list) {
+    const { mapping, tag } = this.data;
+    return list.map((item) => {
+      const data = {
+        id: item._id,
+        name: item.name,
+        type: mapping[item.type],
+        price: fenToYuan(item.price[0].value),
+        tag: tag[item.type],
+      }
+      return data;
+    });
+  },
+
+  getList() {
+    const db = wx.cloud.database();
+    db.collection('foods').where({}).orderBy('date', 'desc').get({
       success: res => {
-        this.setData({
-          list: res.data
-        })
-        console.log('[数据库] [查询记录] 成功: ', res)
+        const list = this.format(res.data);
+        this.setData({ rawList: list.map((item) => item), list });
+        wx.stopPullDownRefresh();//停止当前页面下拉刷新。
       },
       fail: err => {
         wx.showToast({
           icon: 'none',
           title: '查询记录失败'
         })
-        console.error('[数据库] [查询记录] 失败：', err)
+        wx.stopPullDownRefresh();//停止当前页面下拉刷新。
       }
     })
-  },
-
-  /**
-   * 生命周期函数--监听页面初次渲染完成
-   */
-  onReady: function () {
-
-  },
-
-  /**
-   * 生命周期函数--监听页面显示
-   */
-  onShow: function () {
-
-  },
-
-  /**
-   * 生命周期函数--监听页面隐藏
-   */
-  onHide: function () {
-    
-  },
-
-  /**
-   * 生命周期函数--监听页面卸载
-   */
-  onUnload: function () {
-    
-  },
-
-  /**
-   * 页面相关事件处理函数--监听用户下拉动作
-   */
-  onPullDownRefresh: function () {
-    
-  },
-
-  /**
-   * 页面上拉触底事件的处理函数
-   */
-  onReachBottom: function () {
-    
-  },
-
-  /**
-   * 用户点击右上角分享
-   */
-  onShareAppMessage: function () {
-    
   },
 
   onChange(e) {
     const value = e.detail;
     this.setData({ value });
     
-    const result = data.filter((item) => {
+    const result = this.data.rawList.filter((item) => {
       return item.name.indexOf(value) !== -1;
     });
 
     this.setData({ list: result, active: 0 });
   },
 
-  onSearch() {
-    if (this.data.value) {
-      console.log(this.data.value);
-    }
-  },
-
   handleTabClick(e) {
+    const { rawList } = this.data;
     if (e.detail.index === 0) {
-      this.setData({ list: data });
+      this.setData({ list: rawList });
     } else if (e.detail.index === 1) {
-      const result = data.filter((item) => item.type === 'meats');
+      const result = rawList.filter((item) => item.type === '蔬菜');
       this.setData({ list: result });
     } else if (e.detail.index === 2) {
-      const result = data.filter((item) => item.type === 'vegetables');
+      const result = rawList.filter((item) => item.type === '荤菜');
+      this.setData({ list: result });
+    } else if (e.detail.index === 3) {
+      const result = rawList.filter((item) => item.type === '菌菇');
       this.setData({ list: result });
     }
   },
 
-  handleCellClick() {
-    const db = wx.cloud.database();
-    console.dir(db);
-    db.collection('food').where({ name: "土豆" }).get({
-      success: function (res) {
-        // 输出 [{ "title": "The Catcher in the Rye", ... }]
-        console.log(res)
+  handleCellClick(e) {
+    const { item } = e.currentTarget.dataset;
+    // const db = wx.cloud.database();
+    // db.collection('foods').where({ _id: item.id }).get({
+    //   success: function (res) {
+    //     // 输出 [{ "title": "The Catcher in the Rye", ... }]
+    //     console.log(res)
+    //   }
+    // })
+    wx.navigateTo({
+      url: '/pages/chart/chart',
+      success(res) {
+        res.eventChannel.emit('acceptDataFromOpenerPage', { data: item })
       }
     })
-    // wx.navigateTo({
-    //   url: '/pages/chart/chart',
-    // })
   }
 })

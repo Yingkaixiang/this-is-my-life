@@ -1,62 +1,126 @@
+import { formatTime } from '../../utils/date.js';
+
 Page({
   data: {
-    array: [
-      { id: 1, name: '蔬菜' },
-      { id: 2, name: '荤菜' },
-      { id: 3, name: '菌菇' },
+    name: '',
+    type: -1,
+    show: false,
+    dateShow: false,
+    columns: [
+      { text: "蔬菜", id: "1" },
+      { text: "荤菜", id: "2" },
+      { text: "菌菇", id: "3" },
     ],
-    index: -1,
+    error: {},
+    currentDate: new Date().getTime(),
     date: '',
+    loading: false,
   },
 
-  handleTypeChange(e) {
-    this.setData({ index: e.detail.value });
+  handleNameInput(e) {
+    this.setData({ name: e.detail.value });
   },
 
-  handleDateChange(e) {
-    this.setData({ date: e.detail.value });
+  handleTypeTap() {
+    this.setData({ show: true });
   },
 
-  formSubmit: function (e) {
-    const { array } = this.data;
-    const {
-      type,
-      price,
-      date,
-      location,
-      ...restProps
-    } = e.detail.value;
-    const data = {
-      ...restProps,
-      price: [
-        {
-          value: parseFloat(price) * 100,
-          location: location,
-          date: date,
-        }
-      ],
-      type: array[type].id
+  handleTypeConfirm(e) {
+    this.setData({
+      type: e.detail.index,
+      show: false
+    });
+    this.closePopup();
+  },
+
+  handleTypeCancel() {
+    this.closePopup();
+  },
+
+  handleDateTap() {
+    this.setData({ dateShow: true })
+  },
+
+  handleDateConfirm(e) {
+    this.setData({ date: formatTime(e.detail) });
+    this.closeDatePopup();
+  },
+
+  handleDateCancel() {
+    this.closeDatePopup();
+  },
+
+  // 关闭弹框
+  closePopup() {
+    this.setData({ show: false });
+  },
+
+  // 关闭弹框
+  closeDatePopup() {
+    this.setData({ dateShow: false });
+  },
+
+  handleFormSubmit(e) {
+    this.setData({ loading: true });
+    const data = e.detail.value;
+
+    const valid = Object.keys(data).every((key) => {
+      const value = data[key];
+      if (!value) {
+        this.setData({
+          [`error.${key}`]: '此选项不能为空'
+        });
+        return false;
+      } else {
+        this.setData({
+          [`error.${key}`]: ''
+        });
+        return true;
+      }
+    });
+
+    if (valid) {
+      const { type, columns } = this.data;
+      const params = {
+        name: data.name,
+        type: columns[type].id,
+        price: [
+          {
+            value: this.fenToHundred(data.price),
+            date: new Date(data.date),
+            location: data.location
+          }
+        ],
+      }
+      
+      this.create(params);
+    } else {
+      this.setData({ loading: false });
     }
+  },
+
+  handleFormReset() { },
+
+  create(data) {
     const db = wx.cloud.database()
     db.collection('foods').add({
       data,
       success: res => {
-        wx.showToast({
-          title: '新增记录成功',
-        })
-        console.log('[数据库] [新增记录] 成功，记录 _id: ', res._id)
+        wx.showToast({ title: '新增记录成功' });
+        this.setData({ loading: false });
       },
       fail: err => {
         wx.showToast({
           icon: 'none',
           title: '新增记录失败'
-        })
-        console.error('[数据库] [新增记录] 失败：', err)
-      }
-    })
+        });
+        this.setData({ loading: false });
+      },
+    });
   },
 
-  formReset: function () {
-    console.log('form发生了reset事件')
-  }
+  // 分转百位
+  fenToHundred(value) {
+    return Math.round(parseFloat(value) * 100);
+  },
 })

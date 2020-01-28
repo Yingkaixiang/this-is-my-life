@@ -1,29 +1,33 @@
 {
   "pages": [
     "pages/priceList/priceList",
-    "pages/index/index",
     "pages/addFood/addFood",
-    "pages/chart/chart",
-    "pages/userConsole/userConsole",
-    "pages/storageConsole/storageConsole",
-    "pages/databaseGuide/databaseGuide",
-    "pages/addFunction/addFunction",
-    "pages/deployFunctions/deployFunctions",
-    "pages/chooseLib/chooseLib",
-    "pages/openapi/openapi",
-    "pages/openapi/serverapi/serverapi",
-    "pages/openapi/callback/callback",
-    "pages/openapi/cloudid/cloudid",
-    "pages/im/im",
-    "pages/im/room/room"
+    "pages/index/index",
+    "pages/chart/chart"
   ],
   "window": {
     "backgroundColor": "#F6F6F6",
     "backgroundTextStyle": "light",
     "navigationBarBackgroundColor": "#F6F6F6",
-    "navigationBarTitleText": "云开发 QuickStart",
+    "navigationBarTitleText": "我的菜市场",
     "navigationBarTextStyle": "black"
   },
   "sitemapLocation": "sitemap.json",
-  "style": "v2"
+  "style": "v2",
+  "tabBar": {
+    "list": [
+      {
+        "pagePath": "pages/addFood/addFood",
+        "text": "新增",
+        "iconPath": "images/create.png",
+        "selectedIconPath": "images/create-selected.png"
+      },
+      {
+        "pagePath": "pages/priceList/priceList",
+        "text": "列表",
+        "iconPath": "images/list.png",
+        "selectedIconPath": "images/list-selected.png"
+      }
+    ]
+  }
 }

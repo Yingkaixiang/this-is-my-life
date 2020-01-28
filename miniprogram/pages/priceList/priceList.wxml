@@ -4,33 +4,34 @@
   value="{{ value }}"
   placeholder="请输入搜索关键词"
   bind:change="onChange"
-  bind:search="onSearch"
 />
 
 <van-tabs
   active="{{ active }}"
   type="card"
-  class="tab"
   bind:click="handleTabClick"
 >
-  <van-tab name="all" title="全部" />
-  <van-tab name="meats" title="荤菜" />
-  <van-tab name="vegetables" title="蔬菜" />
+  <van-tab
+    wx:for="{{ mapping }}"
+    wx:for-index="key"
+    wx:for-item="value"
+    name="{{ key }}"
+    title="{{ value }}"
+  />
 </van-tabs>
 
 <van-cell-group>
   <van-cell
     wx:for="{{ list }}"
     wx:key="id"
-    value="{{ item.price[0].value / 100 }}元"
+    value="{{ item.price }}"
     is-link
+    data-item="{{ item }}"
     bind:click="handleCellClick"
   >
     <view slot="title">
-      <van-tag
-        type="{{ item.type === 1 ? 'success' : 'warning' }}"
-      >
-        {{ item.type === 1 ? '蔬菜' : '荤菜' }}
+      <van-tag type="{{ item.tag }}">
+        {{ item.type }}
       </van-tag>
       <view class="title">{{ item.name }}</view>
     </view>
